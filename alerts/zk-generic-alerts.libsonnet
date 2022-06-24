@@ -36,11 +36,24 @@
           },
         },
         {
-          alert: 'FREQUENT_LEADER_ELECTION',
+          alert: 'ZK_LEADER_ELECTION',
           expr: 'increase(election_time_count{%(prefixedNamespaceSelector)s%(labelSelector)s}[5m]) > 0' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
             severity: 'warning',
+          },
+          annotations: {
+            summary: 'Instance {{ $labels.instance }}  a leader election happens',
+            description: '{{ $labels.instance }} ZooKeeper a leader election happens: [{{ $value }}].',
+          },
+        },
+        {
+          // Idea that cluster size should not be hardcoded
+          alert: 'ZK_MISSING_QUORUM',
+          expr: 'max(quorum_size{%(prefixedNamespaceSelector)s%(labelSelector)s}) - sum(up{%(prefixedNamespaceSelector)s%(labelSelector)s})' % $._config,
+          'for': $._config.prefixedDuration,
+          labels: {
+            severity: 'critical',
           },
           annotations: {
             summary: 'Instance {{ $labels.instance }}  a leader election happens',
