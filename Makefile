@@ -5,7 +5,7 @@ PROMETHEUS_IMAGE := prom/prometheus:v2.36.0
 
 JSONNET_FMT := jsonnetfmt
 
-all: fmt prometheus_alerts.yaml prometheus_rules.yaml dashboards_out lint test ## Generate files, lint and test
+all: fmt prometheus_alerts.yaml prometheus_rules.yaml lint ## Generate files, lint and
 
 fmt: ## Format Jsonnet
 	find . -name 'vendor' -prune -o -name '*.libsonnet' -print -o -name '*.jsonnet' -print | \
