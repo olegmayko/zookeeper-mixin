@@ -28,7 +28,7 @@
           expr: 'znode_count{%(prefixedNamespaceSelector)s%(labelSelector)s} > 1000000' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
-            severity: 'critical',
+            severity: 'warning',
           },
           annotations: {
             summary: 'Instance {{ $labels.instance }} create too many znodes',
