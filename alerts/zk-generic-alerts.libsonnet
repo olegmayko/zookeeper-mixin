@@ -60,6 +60,42 @@
             description: 'The quorum is not the same as number of zookeeper instances',
           },
         },
+        {
+          alert: 'ZK_JVM_MEMORY_FILLING_UP',
+          expr: 'jvm_memory_bytes_used{%(prefixedNamespaceSelector)s%(labelSelector)s} / jvm_memory_bytes_max{area="heap",%(prefixedNamespaceSelector)s%(labelSelector)s} > 0.9' % $._config,
+          'for': $._config.prefixedDuration,
+          labels: {
+            severity: 'warning',
+          },
+          annotations: {
+            summary: 'JVM memory filling up (instance {{ $labels.instance }})',
+            description: 'JVM memory is filling up (> 80%)\n labels: {{ $labels }}  value = {{ $value }}\n',
+          },
+        },
+        {
+          alert: 'FSYNC_TIME_IS_TOO_LONG',
+          expr: 'rate(fsynctime_sum{%(prefixedNamespaceSelector)s%(labelSelector)s}[5m]) > 100' % $._config,
+          'for': $._config.prefixedDuration,
+          labels: {
+            severity: 'warning',
+          },
+          annotations: {
+            summary: 'Instance {{ $labels.instance }} fsync time is too long',
+            description: '{{ $labels.instance }} of job {{$labels.job}} fsync time is too long: [{{ $value }}].',
+          },
+        },
+        {
+          alert: 'AVERAGE_LATENCY_IS_TOO_HIGH',
+          expr: 'avg_latency{%(prefixedNamespaceSelector)s%(labelSelector)s} > 100' % $._config,
+          'for': $._config.prefixedDuration,
+          labels: {
+            severity: 'warning',
+          },
+          annotations: {
+            summary: 'Instance {{ $labels.instance }} avg latency is too high',
+            description: '{{ $labels.instance }} of job {{$labels.job}} avg latency is too high: [{{ $value }}].',
+          },
+        },
       ],
     }],
   },
