@@ -50,7 +50,7 @@
         {
           // Idea that cluster size should not be hardcoded
           alert: 'ZK_MISSING_QUORUM',
-          expr: 'max(quorum_size{%(prefixedNamespaceSelector)s%(labelSelector)s}) - sum(up{%(prefixedNamespaceSelector)s%(labelSelector)s}) == 0' % $._config,
+          expr: 'max(quorum_size{%(prefixedNamespaceSelector)s%(labelSelector)s}) - sum(up{%(prefixedNamespaceSelector)s%(labelSelector)s}) != 0' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
             severity: 'critical',
