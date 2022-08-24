@@ -96,6 +96,18 @@
             description: '{{ $labels.instance }} of job {{$labels.job}} avg latency is too high: [{{ $value }}].',
           },
         },
+        {
+          alert: 'ZK_LEADER_UNAVAILABLE',
+          expr: 'changes(leader_unavailable_time{%(prefixedNamespaceSelector)s%(labelSelector)s}[5m]) > 0' % $._config,
+          'for': $._config.prefixedDuration,
+          labels: {
+            severity: 'critical',
+          },
+          annotations: {
+            summary: 'ZooKeeper Leader {{ $labels.instance }} is not available',
+            description: 'ZooKeeper {{ $labels.instance }} leader is not available',
+          },
+        },
       ],
     }],
   },
