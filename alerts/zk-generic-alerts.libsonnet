@@ -24,7 +24,7 @@
           },
         },
         {
-          alert: 'CREATE_TOO_MANY_ZNODES',
+          alert: 'ZK_CREATE_TOO_MANY_ZNODES',
           expr: 'znode_count{%(prefixedNamespaceSelector)s%(labelSelector)s} > 1000000' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
@@ -68,31 +68,31 @@
             severity: 'warning',
           },
           annotations: {
-            summary: 'JVM memory filling up (instance {{ $labels.instance }})',
+            summary: 'ZooKeeper JVM memory filling up (instance {{ $labels.instance }})',
             description: 'JVM memory is filling up (> 80%)\n labels: {{ $labels }}  value = {{ $value }}\n',
           },
         },
         {
-          alert: 'FSYNC_TIME_IS_TOO_LONG',
+          alert: 'ZK_FSYNC_TIME_IS_TOO_LONG',
           expr: 'rate(fsynctime_sum{%(prefixedNamespaceSelector)s%(labelSelector)s}[5m]) > 100' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
             severity: 'warning',
           },
           annotations: {
-            summary: 'Instance {{ $labels.instance }} fsync time is too long',
+            summary: 'ZooKeeper Instance {{ $labels.instance }} fsync time is too long',
             description: '{{ $labels.instance }} of job {{$labels.job}} fsync time is too long: [{{ $value }}].',
           },
         },
         {
-          alert: 'AVERAGE_LATENCY_IS_TOO_HIGH',
+          alert: 'ZK_AVERAGE_LATENCY_IS_TOO_HIGH',
           expr: 'avg_latency{%(prefixedNamespaceSelector)s%(labelSelector)s} > 100' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
             severity: 'warning',
           },
           annotations: {
-            summary: 'Instance {{ $labels.instance }} avg latency is too high',
+            summary: 'ZooKeeper Instance {{ $labels.instance }} avg latency is too high',
             description: '{{ $labels.instance }} of job {{$labels.job}} avg latency is too high: [{{ $value }}].',
           },
         },
