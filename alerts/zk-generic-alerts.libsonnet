@@ -19,7 +19,7 @@
             severity: 'critical',
           },
           annotations: {
-            summary: 'Instance {{ $labels.instance }} ZooKeeper server is down',
+            summary: '[{{ $labels.%(envLabel)s | toUpper }}]: Instance {{ $labels.instance }} ZooKeeper server is down' % $._config,
             description: '{{ $labels.instance }} ZooKeeper server is down: [{{ $value }}].',
           },
         },
@@ -31,32 +31,32 @@
             severity: 'warning',
           },
           annotations: {
-            summary: 'Instance {{ $labels.instance }} create too many znodes',
-            description: '{{ $labels.instance }} ZooKeeper server create too many znodes: [{{ $value }}].',
+            summary: '[{{ $labels.%(envLabel)s | toUpper }}]: Instance {{ $labels.instance }} create too many znodes' % $._config,
+            description: '[{{ $labels.%(envLabel)s | toUpper }}]: {{ $labels.instance }} ZooKeeper server create too many znodes: [{{ $value }}].' % $._config,
           },
         },
         {
           alert: 'ZK_LEADER_ELECTION',
-          expr: 'increase(election_time_count{%(prefixedNamespaceSelector)s%(labelSelector)s}[5m]) > 0' % $._config,
+          expr: 'sum by (%(groupByLabels)s) (increase(election_time_count{%(prefixedNamespaceSelector)s%(labelSelector)s}[5m])) > 0' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
             severity: 'warning',
           },
           annotations: {
-            summary: 'ZooKeeper leader election happens',
-            description: 'ZooKeeper a leader election happens: [{{ $value }}].',
+            summary: '[{{ $labels.%(envLabel)s | toUpper }}]: ZooKeeper leader election happens' % $._config,
+            description: 'ZooKeeper a leader election happens: [{{ $value }}]',
           },
         },
         {
           // Idea that cluster size should not be hardcoded
           alert: 'ZK_MISSING_QUORUM',
-          expr: 'max(quorum_size{%(prefixedNamespaceSelector)s%(labelSelector)s}) - sum(up{%(prefixedNamespaceSelector)s%(labelSelector)s}) != 0' % $._config,
+          expr: 'max by (%(groupByLabels)s) (quorum_size{%(prefixedNamespaceSelector)s%(labelSelector)s}) - sum by (%(groupByLabels)s) (up{%(prefixedNamespaceSelector)s%(labelSelector)s}) != 0' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
             severity: 'critical',
           },
           annotations: {
-            summary: 'ZooKeeper missing quorum',
+            summary: '[{{ $labels.%(envLabel)s | toUpper }}] ZooKeeper missing quorum' % $._config,
             description: 'The quorum is not the same as number of zookeeper instances',
           },
         },
@@ -68,7 +68,7 @@
             severity: 'warning',
           },
           annotations: {
-            summary: 'ZooKeeper JVM memory filling up (instance {{ $labels.instance }})',
+            summary: '[{{ $labels.%(envLabel)s | toUpper }}]: ZooKeeper JVM memory filling up (instance {{ $labels.instance }})' % $._config,
             description: 'JVM memory is filling up (> 80%)\n labels: {{ $labels }}  value = {{ $value }}\n',
           },
         },
@@ -80,7 +80,7 @@
             severity: 'warning',
           },
           annotations: {
-            summary: 'ZooKeeper Instance {{ $labels.instance }} fsync time is too long',
+            summary: '[{{ $labels.%(envLabel)s | toUpper }}]: ZooKeeper Instance {{ $labels.instance }} fsync time is too long' % $._config,
             description: '{{ $labels.instance }} of job {{$labels.job}} fsync time is too long: [{{ $value }}].',
           },
         },
@@ -92,20 +92,20 @@
             severity: 'warning',
           },
           annotations: {
-            summary: 'ZooKeeper Instance {{ $labels.instance }} avg latency is too high',
+            summary: '[{{ $labels.%(envLabel)s | toUpper }}]: ZooKeeper Instance {{ $labels.instance }} avg latency is too high' % $._config,
             description: '{{ $labels.instance }} of job {{$labels.job}} avg latency is too high: [{{ $value }}].',
           },
         },
         {
           alert: 'ZK_LEADER_UNAVAILABLE',
-          expr: 'changes(leader_unavailable_time{%(prefixedNamespaceSelector)s%(labelSelector)s}[5m]) > 0' % $._config,
+          expr: 'sum by (%(groupByLabels)s) (changes(leader_unavailable_time{%(prefixedNamespaceSelector)s%(labelSelector)s}[5m])) > 0' % $._config,
           'for': $._config.prefixedDuration,
           labels: {
             severity: 'critical',
           },
           annotations: {
-            summary: 'ZooKeeper Leader {{ $labels.instance }} is not available',
-            description: 'ZooKeeper {{ $labels.instance }} leader is not available',
+            summary: '[{{ $labels.%(envLabel)s | toUpper }}]: ZooKeeper Leader {{ $labels.%(envLabel)s }} is not available' % $._config,
+            description: 'ZooKeeper {{ $labels.%(envLabel)s }} leader is not available' % $._config,
           },
         },
       ],
